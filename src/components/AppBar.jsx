@@ -1,10 +1,14 @@
-import React from 'react';
+import React, { useContext } from 'react';
+import { useApolloClient } from '@apollo/client';
 import Constants from 'expo-constants';
 import { View, StyleSheet, ScrollView } from 'react-native';
 import { Link } from 'react-router-native';
 
+import AuthStorageContext from '../contexts/AuthStorageContext';
 import AppBarTab from './AppBarTab';
 import theme from '../theme';
+import { useQuery } from '@apollo/react-hooks';
+import { AUTHORIZED_USER } from '../graphql/queries';
 
 const styles = StyleSheet.create({
   container: {
@@ -33,11 +37,26 @@ const styles = StyleSheet.create({
 });
 
 const AppBar = () => {
+  const { data: authorizedUserData } = useQuery(AUTHORIZED_USER);
+
+  const authStorage = useContext(AuthStorageContext);
+  const apolloClient = useApolloClient();
+
+  const signOut = async () => {
+    await authStorage.removeAccessToken();
+    apolloClient.resetStore();
+  };
+
   return (
     <View style={styles.container}>
       <ScrollView horizontal style={styles.scrollView}>
         <Link to='/' component={(onPressEvent) => AppBarTab('Repositories', onPressEvent.onPress)} style={styles.link} />
-        <Link to='/signin' component={(onPressEvent) => AppBarTab('SignIn', onPressEvent.onPress)} style={styles.link} />
+        {authorizedUserData 
+          && !authorizedUserData.authorizedUser
+          && <Link to='/signin' component={(onPressEvent) => AppBarTab('SignIn', onPressEvent.onPress)} style={styles.link} />}
+        {authorizedUserData 
+          && authorizedUserData.authorizedUser 
+          && <Link to='/' component={() => AppBarTab('SignOut', signOut)} style={styles.link} />}
       </ScrollView>
     </View>
   );
