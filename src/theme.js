@@ -1,4 +1,4 @@
-import { Platform } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 
 const theme = {
   colors: {
@@ -32,7 +32,7 @@ const theme = {
     buttonPadding: 5,
     textInputPadding: 5,
     formContainerPadding: 10,
-    appBar: 10,
+    appBar: 15,
     appBarTop: 20,
   },
   margins: {
@@ -43,5 +43,12 @@ const theme = {
     borderRadius: 5,
   },
 };
+
+export const formStyles = StyleSheet.create({
+  container: {
+    backgroundColor: theme.colors.backgroundWhite,
+    padding: theme.padding.formContainerPadding,
+  }
+});
 
 export default theme;

@@ -51,12 +51,18 @@ const AppBar = () => {
     <View style={styles.container}>
       <ScrollView horizontal style={styles.scrollView}>
         <Link to='/' component={(onPressEvent) => AppBarTab('Repositories', onPressEvent.onPress)} style={styles.link} />
+        {authorizedUserData
+        && authorizedUserData.authorizedUser
+        && <Link to='/reviewsform' component={(onPressEvent) => AppBarTab('Create a review', onPressEvent.onPress)} style={styles.link} />}
         {authorizedUserData 
           && !authorizedUserData.authorizedUser
-          && <Link to='/signin' component={(onPressEvent) => AppBarTab('SignIn', onPressEvent.onPress)} style={styles.link} />}
+          && <Link to='/signin' component={(onPressEvent) => AppBarTab('Sign In', onPressEvent.onPress)} style={styles.link} />}
         {authorizedUserData 
           && authorizedUserData.authorizedUser 
-          && <Link to='/' component={() => AppBarTab('SignOut', signOut)} style={styles.link} />}
+          && <Link to='/' component={() => AppBarTab('Sign Out', signOut)} style={styles.link} />}
+        {authorizedUserData 
+          && !authorizedUserData.authorizedUser
+          && <Link to='/signup' component={(onPressEvent) => AppBarTab('Sign Up', onPressEvent.onPress)} style={styles.link} />}
       </ScrollView>
     </View>
   );
