@@ -5,11 +5,17 @@ import { useHistory } from 'react-router-native';
 import ItemSeparator from './ItemSeparator';
 import RepositoryItem from './RepositoryItem';
 import SortPicker from './SortPicker';
+import theme, { formStyles } from '../theme';
 
 import useRepositories from '../hooks/useRepositories';
 import { useDebounce } from 'use-debounce';
 
-const RepositoryListItem = ({ item, handlePress }) => {
+const RepositoryListItem = ({ item }) => {
+  const history = useHistory();
+
+  const handlePress = (item) => {
+    history.push(`/${item.id}`);
+  };
 
   return (
     <TouchableOpacity onPress={() => handlePress(item)}>
@@ -20,55 +26,54 @@ const RepositoryListItem = ({ item, handlePress }) => {
 
 const RepositoryListHeader = ({ sortingPolicy, handleSortingPolicyChange, searchKeyword, setSearchKeyword }) => {
   return (
-    <View>
-      <TextInput value={searchKeyword} onChange={event => setSearchKeyword(event.target.value)} />
-      <SortPicker sortingPolicy={sortingPolicy} handleSortingPolicyChange={handleSortingPolicyChange} />
+    <View style={{ ...formStyles.container, backgroundColor: theme.colors.backgroundGray }}>
+      <TextInput value={searchKeyword} onChangeText={text => setSearchKeyword(text)} style={formStyles.element} />
+      <SortPicker sortingPolicy={sortingPolicy} handleSortingPolicyChange={handleSortingPolicyChange} style={formStyles.element} />
     </View>
   );
 };
 
-export const RepositoryListContainer = ({
-  repositories,
-  onEndReach,
-  sortingPolicy,
-  handleSortingPolicyChange,
-  searchKeyword,
-  setSearchKeyword
-}) => {
-  const history = useHistory();
+export class RepositoryListContainer extends React.Component {
+  constructor(props) {
+    super(props);
+  }
 
-  const handlePress = (item) => {
-    history.push(`/${item.id}`);
-  };
+  renderHeader = () => {
+    return (
+      <RepositoryListHeader
+        sortingPolicy={this.props.sortingPolicy}
+        handleSortingPolicyChange={this.props.handleSortingPolicyChange}
+        searchKeyword={this.props.searchKeyword}
+        setSearchKeyword={this.props.setSearchKeyword}
+      />
+    );
+  }
 
-  const repositoryNodes = repositories
-    ? repositories.edges.map(edge => edge.node)
-    : [];
+  render() {
+    const repositoryNodes = this.props.repositories
+      ? this.props.repositories.edges.map(edge => edge.node)
+      : [];
 
-  return (
-    <FlatList
-      data={repositoryNodes}
-      ItemSeparatorComponent={ItemSeparator}
-      renderItem={data => <RepositoryListItem {...data} handlePress={handlePress} />}
-      keyExtractor={item => item.id}
-      ListHeaderComponent={() => <RepositoryListHeader 
-        sortingPolicy={sortingPolicy}
-        handleSortingPolicyChange={handleSortingPolicyChange}
-        searchKeyword={searchKeyword}
-        setSearchKeyword={setSearchKeyword}
-        />}
-      onEndReached={onEndReach}
-      onEndReachedThreshold={.5}
-    />
-  );
-};
+    return (
+      <FlatList
+        data={repositoryNodes}
+        ItemSeparatorComponent={ItemSeparator}
+        renderItem={data => <RepositoryListItem {...data} />}
+        keyExtractor={item => item.id}
+        ListHeaderComponent={this.renderHeader}
+        onEndReached={this.props.onEndReach}
+        onEndReachedThreshold={.5}
+      />
+    );
+  }
+}
 
 const RepositoryList = () => {
   const [sortingPolicy, setSortingPolicy] = useState('latest');
   const [orderBy, setOrderBy] = useState('CREATED_AT');
   const [orderDirection, setOrderDirection] = useState('DESC');
   const [searchKeyword, setSearchKeyword] = useState('');
-  const [debouncedSearchKeyword] = useDebounce(searchKeyword, 1000);
+  const [debouncedSearchKeyword] = useDebounce(searchKeyword, 300);
 
   const handleSortingPolicyChange = (policy) => {
     setSortingPolicy(policy);

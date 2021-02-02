@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, Picker } from 'react-native';
 
-const SortPicker = ({ sortingPolicy, handleSortingPolicyChange }) => {
+const SortPicker = ({ sortingPolicy, handleSortingPolicyChange, style }) => {
 
   return (
-    <View>
+    <View style={style}>
       <Picker
         selectedValue={sortingPolicy}
         onValueChange={handleSortingPolicyChange}

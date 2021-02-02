@@ -48,6 +48,11 @@ export const formStyles = StyleSheet.create({
   container: {
     backgroundColor: theme.colors.backgroundWhite,
     padding: theme.padding.formContainerPadding,
+    margin: theme.margins.commonMargin,
+  },
+  element: {
+    margin: theme.margins.commonMargin,
+    backgroundColor: theme.colors.backgroundWhite,
   }
 });
 
