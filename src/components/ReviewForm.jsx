@@ -7,6 +7,7 @@ import * as yup from 'yup';
 
 import Text from './Text';
 import FormikTextInput from './FormikTextInput';
+import { AUTHORIZED_USER } from '../graphql/queries';
 import { CREATE_REVIEW } from '../graphql/mutations';
 import { formStyles } from '../theme';
 
@@ -42,7 +43,9 @@ const ReviewForm = ({ handleSubmit }) => {
 
 const ReviewFormContainer = () => {
   const history = useHistory();
-  const [createReview] = useMutation(CREATE_REVIEW);
+  const [createReview] = useMutation(CREATE_REVIEW, {
+    refetchQueries: [{ query: AUTHORIZED_USER, variables: { includeReviews: true } }]
+  });
 
   const handleSubmit = async values => {
     try {

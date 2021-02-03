@@ -42,6 +42,8 @@ const AppBar = () => {
   const authStorage = useContext(AuthStorageContext);
   const apolloClient = useApolloClient();
 
+  const signedIn = authorizedUserData && authorizedUserData.authorizedUser;
+
   const signOut = async () => {
     await authStorage.removeAccessToken();
     apolloClient.resetStore();
@@ -51,18 +53,12 @@ const AppBar = () => {
     <View style={styles.container}>
       <ScrollView horizontal style={styles.scrollView}>
         <Link to='/' component={(onPressEvent) => AppBarTab('Repositories', onPressEvent.onPress)} style={styles.link} />
-        {authorizedUserData
-        && authorizedUserData.authorizedUser
-        && <Link to='/reviewsform' component={(onPressEvent) => AppBarTab('Create a review', onPressEvent.onPress)} style={styles.link} />}
-        {authorizedUserData 
-          && !authorizedUserData.authorizedUser
-          && <Link to='/signin' component={(onPressEvent) => AppBarTab('Sign In', onPressEvent.onPress)} style={styles.link} />}
-        {authorizedUserData 
-          && authorizedUserData.authorizedUser 
-          && <Link to='/' component={() => AppBarTab('Sign Out', signOut)} style={styles.link} />}
-        {authorizedUserData 
-          && !authorizedUserData.authorizedUser
-          && <Link to='/signup' component={(onPressEvent) => AppBarTab('Sign Up', onPressEvent.onPress)} style={styles.link} />}
+        {signedIn && <Link to='/reviewsform' component={(onPressEvent) => AppBarTab('Create a review', onPressEvent.onPress)} style={styles.link} />}
+        {signedIn && <Link to='/myreviews' component={(onPressEvent) => AppBarTab('My reviews', onPressEvent.onPress)} style={styles.link} />}
+        {signedIn && <Link to='/' component={() => AppBarTab('Sign Out', signOut)} style={styles.link} />}
+
+        {!signedIn && <Link to='/signin' component={(onPressEvent) => AppBarTab('Sign In', onPressEvent.onPress)} style={styles.link} />}
+        {!signedIn && <Link to='/signup' component={(onPressEvent) => AppBarTab('Sign Up', onPressEvent.onPress)} style={styles.link} />}
       </ScrollView>
     </View>
   );

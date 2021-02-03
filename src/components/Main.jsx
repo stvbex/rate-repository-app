@@ -6,6 +6,7 @@ import SignIn from './SignIn';
 import SignUp from './SignUp';
 import RepositoryView from './RepositoryView';
 import ReviewFormContainer from './ReviewForm';
+import MyReviews from './MyReviews';
 
 import { Redirect, Route, Switch } from 'react-router-native';
 import theme from '../theme';
@@ -28,6 +29,9 @@ const Main = () => {
         </Route>
         <Route path='/reviewsform'>
           <ReviewFormContainer />
+        </Route>
+        <Route path='/myreviews'>
+          <MyReviews />
         </Route>
         <Route path='/signin'>
           <SignIn />

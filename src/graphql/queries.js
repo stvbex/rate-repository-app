@@ -36,22 +36,56 @@ export const GET_REPOSITORIES = gql`
   }
 `;
 
-export const REPOSITORY =  gql`
-  query Repository($id: ID!) {
-    repository(id: $id) {
+export const REPOSITORY = gql`
+  query Repository(
+    $id: ID!
+    $reviewsFirst: Int
+    $reviewsAfter: String
+  ) {
+      repository(id: $id) {
+        id
+        fullName
+        ownerName
+        ownerAvatarUrl
+        description
+        language
+        ratingAverage
+        reviewCount
+        stargazersCount
+        watchersCount
+        forksCount
+        url
+        reviews(
+          first: $reviewsFirst
+          after: $reviewsAfter
+        ) {
+          edges {
+            node {
+              id
+              text
+              rating
+              createdAt
+              user {
+                username
+              }
+            }
+            cursor
+          }
+          pageInfo {
+            endCursor
+            hasNextPage
+          }
+        }
+      }
+    }
+`;
+
+export const AUTHORIZED_USER = gql`
+  query AuthorizedUser($includeReviews: Boolean = false) {
+    authorizedUser {
       id
-      fullName
-      ownerName
-      ownerAvatarUrl
-      description
-      language
-      ratingAverage
-      reviewCount
-      stargazersCount
-      watchersCount
-      forksCount
-      url
-      reviews {
+      username
+      reviews @include(if: $includeReviews) {
         edges {
           node {
             id
@@ -61,18 +95,14 @@ export const REPOSITORY =  gql`
             user {
               username
             }
+            repository {
+              fullName
+              url
+            }
           }
+          cursor
         }
       }
     }
   }
-`
-
-export const AUTHORIZED_USER = gql`
-  query {
-    authorizedUser {
-      id
-      username
-    }
-  }
-`
+`;

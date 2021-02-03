@@ -36,6 +36,9 @@ const RepositoryListHeader = ({ sortingPolicy, handleSortingPolicyChange, search
 export class RepositoryListContainer extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      repositoryNodes: []
+    };
   }
 
   renderHeader = () => {
@@ -49,14 +52,18 @@ export class RepositoryListContainer extends React.Component {
     );
   }
 
-  render() {
-    const repositoryNodes = this.props.repositories
-      ? this.props.repositories.edges.map(edge => edge.node)
-      : [];
+  static getDerivedStateFromProps = (newProps) => {
+    return {
+      repositoryNodes: newProps.repositories
+        ? newProps.repositories.edges.map(edge => edge.node)
+        : []
+    };
+  }
 
+  render() {
     return (
       <FlatList
-        data={repositoryNodes}
+        data={this.state.repositoryNodes}
         ItemSeparatorComponent={ItemSeparator}
         renderItem={data => <RepositoryListItem {...data} />}
         keyExtractor={item => item.id}

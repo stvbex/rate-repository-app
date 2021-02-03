@@ -48,7 +48,14 @@ const styles = StyleSheet.create({
     color: theme.colors.buttonTextPrimary,
     padding: theme.padding.buttonPadding,
     textAlign: 'center',
-  }
+  },
+  buttonThemeWarning: {
+    backgroundColor: theme.colors.warning,
+    color: theme.colors.buttonTextPrimary,
+    padding: theme.padding.buttonPadding,
+    borderRadius: theme.borders.borderRadius,
+    textAlign: 'center',
+  },
 });
 
 const Text =({ color, buttonTheme, fontSize, fontWeight, style, ...props }) => {
@@ -61,6 +68,7 @@ const Text =({ color, buttonTheme, fontSize, fontWeight, style, ...props }) => {
     buttonTheme === 'primary' && styles.buttonThemePrimary,
     buttonTheme === 'secondary' && styles.buttonThemeSecondary,
     buttonTheme === 'navigation' && styles.buttonThemeNavigation,
+    buttonTheme === 'warning' && styles.buttonThemeWarning,
     style,
   ];
 

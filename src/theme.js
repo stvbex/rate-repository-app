@@ -6,6 +6,7 @@ const theme = {
     textSecondary: '#586069', // darkgray
     primary: '#0366d6', // button blue
     secondary: '#a9a9b0', // gray
+    warning: 'red',
     buttonTextPrimary: 'white',
     buttonTextSecondary: 'black',
     backgroundGray: 'lightgray',
